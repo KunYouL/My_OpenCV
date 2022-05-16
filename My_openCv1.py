@@ -162,11 +162,35 @@ class Myfunction:
         cv.imshow('new_src', new_src)
 
     def warpperspective(self):  #影像透視
+        src = self.open_file1()
+        cv.circle(src, (18, 28), 5, (255, 128, 128), -1)  # (圖片, 圓的位子, 圓大小,顏色, 實心 )
+        cv.circle(src, (202, 32), 5, (255, 128, 128), -1)
+        cv.circle(src, (17, 161), 5, (255, 128, 128), -1)
+        cv.circle(src, (186, 168), 5, (255, 128, 128), -1)
 
+        pts1 = np.float32([[18, 28], [202, 32], [17, 150], [186, 150]])  # 第二圖對應的點
+        pts2 = np.float32([[0, 0], [400, 0], [0, 600], [400, 500]])  # 第二圖的大小
+        matrix = cv.getPerspectiveTransform(pts1, pts2)  # 轉換
+
+        result = cv.warpPerspective(src, matrix, (400, 500))
+        cv.imshow('src',src)
+        cv.imshow('result',result)
         pass
 
     def affine(self):  #仿射轉換(平移)
-        pass
+        src = self.open_file1()
+        height, width = src.shape[:2]  #讀取原影像的長、寬
+        x = 30  #自訂義轉換矩陣M的x軸移動值
+        y = 20  #自訂義轉換矩陣M的y軸移動值
+        M = np.float32([[1, 0, x], [0, 1, y]])
+        move = cv.warpAffine(src, M, (width, height))   #平移映射
+        cv.imshow('src', src)
+        cv.imshow('move', move)
 
     def rotate(self):  #仿射轉換(旋轉)
-        pass
+        src = self.open_file1()
+        height, width = src.shape[:2] #讀取原影像的長、寬
+        M=cv.getRotationMatrix2D((width/2,height/2),45,0.6)  #以中心為原點，逆時針轉45度，且縮小為原圖的0.6倍
+        rotate=cv.warpAffine(src,M,(width,height))   #旋轉映射
+        cv.imshow('src', src)
+        cv.imshow('rotate', rotate)
