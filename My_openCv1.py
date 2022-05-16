@@ -172,9 +172,9 @@ class Myfunction:
         pts2 = np.float32([[0, 0], [400, 0], [0, 600], [400, 500]])  # 第二圖的大小
         matrix = cv.getPerspectiveTransform(pts1, pts2)  # 轉換
 
-        result = cv.warpPerspective(src, matrix, (400, 500))
+        dst1 = cv.warpPerspective(src, matrix, (400, 500))
         cv.imshow('src',src)
-        cv.imshow('result',result)
+        cv.imshow('dst1',dst1)
         pass
 
     def affine(self):  #仿射轉換(平移)
