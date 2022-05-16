@@ -31,6 +31,8 @@ class App:
         self.operation1_menu.add_command(label='霍夫轉換', command=self.my_function.hough_transform)
         self.operation1_menu.add_command(label='高斯模糊', command=self.my_function.gaussianBlur)
         self.operation1_menu.add_command(label='邊角偵測', command=self.my_function.corner_harris)
+        self.operation1_menu.add_command(label='輪廓檢測', command=self.my_function.contour)
+        self.operation1_menu.add_command(label='輪廓檢測(1)', command=self.my_function.find_contour)
 
         #Add operation2 submenu
         self.operation2_menu = tk.Menu(self.main_menu, tearoff=0)

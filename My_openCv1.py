@@ -6,6 +6,7 @@ from tkinter import filedialog
 from matplotlib import pyplot as plt
 import numpy as np
 import math
+import  random
 
 
 class Myfunction:
@@ -142,6 +143,44 @@ class Myfunction:
         cv.imshow('src',src)
         cv.imshow('dst',dst)
 
+    def contour(self):  # 輪廓檢測
+        src = self.open_file1()
+        gray = cv.cvtColor(src,cv.COLOR_BGR2GRAY)
+
+        ret,src_thresh = cv.threshold(gray,127,255,cv.THRESH_BINARY)
+
+        contours, hierarchy = cv.findContours(src_thresh,cv.RETR_TREE,cv.CHAIN_APPROX_SIMPLE)
+        cv.drawContours(src,contours,-1,(0,0,255),3)
+        cv.imshow('contour',src)
+
+    def find_contour(self):  # 輪廓檢測
+        def contour_threshold_callback(val):
+            threshold = val
+            canny_output = cv.Canny(gray,threshold,threshold * 2)
+            contours, hierarchy = cv.findContours(canny_output, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+
+            drawing = np.zeros((canny_output.shape[0],canny_output.shape[1], 3),dtype=np.uint8)
+
+            for i in range(len(contours)):
+                color = (random.randint(0,256),random.randint(0,256), random.randint(0,256))
+                cv.drawContours(drawing,contours, i , color, 2, cv.LINE_8,hierarchy,0)
+                cv.imshow('Contour',drawing)
+
+        src = self.open_file1()
+        gray = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
+        gray = cv.blur(gray,(3,3))
+
+
+        source_window = 'Source image'
+        cv.namedWindow(source_window)
+        cv.imshow(source_window, src)
+        max_thresh = 255
+        thresh = 100
+        cv.createTrackbar('Threshold: ',source_window,thresh,max_thresh,contour_threshold_callback)
+        contour_threshold_callback(thresh)
+
+        pass
+
     def thresholding(self):  #二值化
         src = self.open_file1()
         src = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
@@ -149,7 +188,7 @@ class Myfunction:
         ret, th1 = cv.threshold(src, 127, 255, cv.THRESH_BINARY)  #二值化(未模糊)
         #adaptiveThreshold可將一般圖片做自適應二值化
         th2 = cv.adaptiveThreshold(src, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 11, 2) #  平均二值化(未模糊降噪)
-        th3 = cv.adaptiveThreshold(src, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 2) #高斯二值化(未模糊ru)
+        th3 = cv.adaptiveThreshold(src, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 2) #高斯二值化(未模糊降噪)
 
         cv.imshow('th1', th1)
         cv.imshow('th2', th2)
@@ -175,7 +214,6 @@ class Myfunction:
         dst1 = cv.warpPerspective(src, matrix, (400, 500))
         cv.imshow('src',src)
         cv.imshow('dst1',dst1)
-        pass
 
     def affine(self):  #仿射轉換(平移)
         src = self.open_file1()
