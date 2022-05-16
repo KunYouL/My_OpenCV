@@ -149,7 +149,7 @@ class Myfunction:
         ret, th1 = cv.threshold(src, 127, 255, cv.THRESH_BINARY)  #二值化(未模糊)
         #adaptiveThreshold可將一般圖片做自適應二值化
         th2 = cv.adaptiveThreshold(src, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 11, 2) #  平均二值化(未模糊降噪)
-        th3 = cv.adaptiveThreshold(src, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 2) #高斯二值化(未模糊降噪)
+        th3 = cv.adaptiveThreshold(src, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 2) #高斯二值化(未模糊ru)
 
         cv.imshow('th1', th1)
         cv.imshow('th2', th2)
@@ -162,31 +162,11 @@ class Myfunction:
         cv.imshow('new_src', new_src)
 
     def warpperspective(self):  #影像透視
-        src = self.open_file1()
-        rows,cols=src.shape[:2]
-        print(rows,cols)
-        pts1=np.float32([[0,0],[274,0],[0,184],[274,184]])
-        pts2=np.float32([[30,50],[rows-30,50],[30,cols-50],[rows-30,cols-50]])
-        M=cv.getPerspectiveTransform(pts1,pts2)
-        dst=cv.warpPerspective(src,M,(cols,rows))
-        cv.imshow('src',src)
-        cv.imshow('dst1',dst)
+
         pass
 
     def affine(self):  #仿射轉換(平移)
-        src = self.open_file1()
-        height, width = src.shape[:2]  #讀取原影像的長、寬
-        x = 30  #自訂義轉換矩陣M的x軸移動值
-        y = 20  #自訂義轉換矩陣M的y軸移動值
-        M = np.float32([[1, 0, x], [0, 1, y]])
-        move = cv.warpAffine(src, M, (width, height))   #平移映射
-        cv.imshow('src', src)
-        cv.imshow('move', move)
+        pass
 
     def rotate(self):  #仿射轉換(旋轉)
-        src = self.open_file1()
-        height, width = src.shape[:2] #讀取原影像的長、寬
-        M=cv.getRotationMatrix2D((width/2,height/2),45,0.6)  #以中心為原點，逆時針轉45度，且縮小為原圖的0.6倍
-        rotate=cv.warpAffine(src,M,(width,height))   #旋轉映射
-        cv.imshow('src', src)
-        cv.imshow('rotate', rotate)
+        pass

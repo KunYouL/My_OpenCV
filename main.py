@@ -46,7 +46,7 @@ class App:
 
         # Add operation4 submenu
         self.operation4_menu = tk.Menu(self.main_menu, tearoff=0)
-        self.operation4_menu.add_command(label='影像投影', command=self.my_function.warpperspective)
+        self.operation4_menu.add_command(label='影像透視', command=self.my_function.warpperspective)
         self.operation4_menu.add_command(label='仿射轉換(平移)', command=self.my_function.affine)
         self.operation4_menu.add_command(label='仿射轉換(旋轉)', command=self.my_function.rotate)
 
