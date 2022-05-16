@@ -153,7 +153,7 @@ class Myfunction:
         cv.drawContours(src,contours,-1,(0,0,255),3)
         cv.imshow('contour',src)
 
-    def find_contour(self):  # 輪廓檢測
+    def find_contour(self):  # 輪廓檢測(1)
         def contour_threshold_callback(val):
             threshold = val
             canny_output = cv.Canny(gray,threshold,threshold * 2)
