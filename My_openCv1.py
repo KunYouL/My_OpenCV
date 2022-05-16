@@ -149,7 +149,7 @@ class Myfunction:
         ret, th1 = cv.threshold(src, 127, 255, cv.THRESH_BINARY)  #二值化(未模糊)
         #adaptiveThreshold可將一般圖片做自適應二值化
         th2 = cv.adaptiveThreshold(src, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 11, 2) #  平均二值化(未模糊降噪)
-        th3 = cv.adaptiveThreshold(src, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 2) #高斯二值化(未模糊醬噪)
+        th3 = cv.adaptiveThreshold(src, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 2) #高斯二值化(未模糊降噪)
 
         cv.imshow('th1', th1)
         cv.imshow('th2', th2)
