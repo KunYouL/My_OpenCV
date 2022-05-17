@@ -133,53 +133,6 @@ class Myfunction:
         Blur = cv.GaussianBlur(src, (15, 15), 10)   #kernel只能是奇數，且逗號前後數值要相同
         cv.imshow('Blur', Blur)
 
-    def corner_harris(self): #邊角檢測
-        src = self.open_file1()
-        gray= cv.cvtColor(src,cv.COLOR_BGR2GRAY)
-        gray = np.float32(gray)
-        dst = cv.cornerHarris(gray,2,3,0.06)
-        dst = cv.dilate(dst,None)
-        src[dst>0.01*dst.max()] = [0,0,255]
-        cv.imshow('src',src)
-        cv.imshow('dst',dst)
-
-    def contour(self):  # 輪廓檢測
-        src = self.open_file1()
-        gray = cv.cvtColor(src,cv.COLOR_BGR2GRAY)
-
-        ret,src_thresh = cv.threshold(gray,127,255,cv.THRESH_BINARY)
-
-        contours, hierarchy = cv.findContours(src_thresh,cv.RETR_TREE,cv.CHAIN_APPROX_SIMPLE)
-        cv.drawContours(src,contours,-1,(0,0,255),3)
-        cv.imshow('contour',src)
-
-    def find_contour(self):  # 輪廓檢測(1)
-        def contour_threshold_callback(val):
-            threshold = val
-            canny_output = cv.Canny(gray,threshold,threshold * 2)
-            contours, hierarchy = cv.findContours(canny_output, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-
-            drawing = np.zeros((canny_output.shape[0],canny_output.shape[1], 3),dtype=np.uint8)
-
-            for i in range(len(contours)):
-                color = (random.randint(0,256),random.randint(0,256), random.randint(0,256))
-                cv.drawContours(drawing,contours, i , color, 2, cv.LINE_8,hierarchy,0)
-                cv.imshow('Contour',drawing)
-
-        src = self.open_file1()
-        gray = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
-        gray = cv.blur(gray,(3,3))
-
-
-        source_window = 'Source image'
-        cv.namedWindow(source_window)
-        cv.imshow(source_window, src)
-        max_thresh = 255
-        thresh = 100
-        cv.createTrackbar('Threshold: ',source_window,thresh,max_thresh,contour_threshold_callback)
-        contour_threshold_callback(thresh)
-
-        pass
 
     def thresholding(self):  #二值化
         src = self.open_file1()
@@ -232,3 +185,138 @@ class Myfunction:
         rotate=cv.warpAffine(src,M,(width,height))   #旋轉映射
         cv.imshow('src', src)
         cv.imshow('rotate', rotate)
+
+    def corner_harris(self): #邊角檢測
+        src = self.open_file1()
+        gray= cv.cvtColor(src,cv.COLOR_BGR2GRAY)
+        gray = np.float32(gray)
+        dst = cv.cornerHarris(gray,2,3,0.06)
+        dst = cv.dilate(dst,None)
+        src[dst>0.01*dst.max()] = [0,0,255]
+        cv.imshow('src',src)
+        cv.imshow('dst',dst)
+
+    def contour(self):  # 輪廓檢測
+        src = self.open_file1()
+        gray = cv.cvtColor(src,cv.COLOR_BGR2GRAY)
+
+        ret,src_thresh = cv.threshold(gray,127,255,cv.THRESH_BINARY)
+
+        contours, hierarchy = cv.findContours(src_thresh,cv.RETR_TREE,cv.CHAIN_APPROX_SIMPLE)
+        cv.drawContours(src,contours,-1,(0,0,255),3)
+        cv.imshow('contour',src)
+
+    def find_contour(self):  # 輪廓檢測(1)
+        def contour_threshold_callback(val):
+            threshold = val
+            canny_output = cv.Canny(gray,threshold,threshold * 2)
+            contours, hierarchy = cv.findContours(canny_output, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+
+            drawing = np.zeros((canny_output.shape[0],canny_output.shape[1], 3),dtype=np.uint8)
+
+            for i in range(len(contours)):
+                color = (random.randint(0,256),random.randint(0,256), random.randint(0,256))
+                cv.drawContours(drawing,contours, i , color, 2, cv.LINE_8,hierarchy,0)
+                cv.imshow('Contour',drawing)
+
+        src = self.open_file1()
+        gray = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
+        gray = cv.blur(gray,(3,3))
+
+        source_window = 'Source image'
+        cv.namedWindow(source_window)
+        cv.imshow(source_window, src)
+        max_thresh = 255
+        thresh = 100
+        cv.createTrackbar('Threshold: ',source_window,thresh,max_thresh,contour_threshold_callback)
+        contour_threshold_callback(thresh)
+
+    def convex_hull(self):  # 凸包
+        def convex_hull_callback(val):
+            threshold1 = val
+            canny_output = cv.Canny(gray,threshold1,threshold1 * 2)
+            contours, _ = cv.findContours(canny_output,cv.RETR_TREE,cv.CHAIN_APPROX_SIMPLE)
+            hull_list = []
+            for i in range(len(contours)):
+                hull = cv.convexHull(contours[i])
+                hull_list.append(hull)
+            drawing = np.zeros((canny_output.shape[0],canny_output.shape[1],3),dtype=np.uint8)
+            for i in range(len(contours)):
+                color = (random.randint(0,256), random.randint(0,256), random.randint(0,256))
+                cv.drawContours(drawing,contours,i,color)
+                cv.drawContours(drawing,hull_list,i,color)
+
+            cv.imshow('Contours',drawing)
+
+        src = self.open_file1()
+        gray = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
+        gray = cv.blur(gray, (3, 3))
+
+        source_window = 'Source image'
+        cv.namedWindow(source_window)
+        cv.imshow(source_window, src)
+        max_thresh = 255
+        thresh = 100
+        cv.createTrackbar('Threshold: ', source_window, thresh, max_thresh, convex_hull_callback)
+        convex_hull_callback(thresh)
+
+    def bounding_box(self):  # 邊界框
+        def bounding_box_callback(val):
+            threshold = val
+            canny_output = cv.Canny(gray, threshold, threshold * 2)
+
+            contours, hierarchy = cv.findContours(canny_output, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+            contours_poly = [None] * len(contours)
+            boundRect = [None] * len(contours)
+            centers = [None] * len(contours)
+            radius = [None] * len(contours)
+            for i, c in enumerate(contours):
+                contours_poly[i] = cv.approxPolyDP(c, 3, True)
+                boundRect[i] = cv.boundingRect(contours_poly[i])
+                centers[i], radius[i] = cv.minEnclosingCircle(contours_poly[i])
+
+            drawing = np.zeros((canny_output.shape[0], canny_output.shape[1],3), dtype=np.uint8)
+
+            for i in range(len(contours)):
+                color = (random.randint(0,256),random.randint(0,256), random.randint(0,256))
+                cv.drawContours(drawing,contours_poly, i , color)
+                #cv.rectangle(drawing,(int(boundRect[i][0]), int(boundRect[i][1])),(int(boundRect[i][0] + boundRect[i][2])))
+                cv.circle(drawing, (int(centers[i][0]), int(centers[i][1])), int(radius[i]), color, 2)
+            cv.imshow('Contour',drawing)
+
+        src = self.open_file1()
+        gray = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
+        gray = cv.blur(gray,(3,3))
+
+        source_window = 'Source image'
+        cv.namedWindow(source_window)
+        cv.imshow(source_window, src)
+        max_thresh = 255
+        thresh = 100
+        cv.createTrackbar('Threshold: ',source_window,thresh,max_thresh,bounding_box_callback)
+        bounding_box_callback(thresh)
+
+    def basic_operations(self):  # 基本操作
+        src = self.open_file1()
+        gray = cv.cvtColor(src,cv.COLOR_BGR2GRAY)
+        ret, thresh = cv.threshold(gray, 127, 255, 0)
+        cv.imshow('Thresholf',thresh)
+
+        #ersion
+        erosin_size = 1
+        erosin_element = cv.getStructuringElement(cv.MORPH_RECT, (2 * erosin_size * 1, 2 * erosin_size * 1),(erosin_size, erosin_size))
+        ersion = cv.erode(thresh, erosin_element)
+        cv.imshow('Erosin', ersion)
+
+        #dilation
+        dilation_size = 3
+        dilation_element = cv.getStructuringElement(cv.MORPH_RECT, (2 * dilation_size * 1, 2 * dilation_size * 1), (dilation_size, dilation_size))
+        dilation = cv.dilate(ersion, dilation_element)
+        cv.imshow('Dilation', dilation)
+
+        #opening
+        opening_size = 3
+        opening_element = cv.getStructuringElement(cv.MORPH_RECT, (2 * opening_size * 1, 2 * opening_size * 1),(opening_size,opening_size))
+        opening = cv.morphologyEx(thresh,cv.MORPH_OPEN, opening_element)
+        cv.imshow('Opening', opening)
+

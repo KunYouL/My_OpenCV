@@ -30,9 +30,6 @@ class App:
         self.operation1_menu.add_command(label='邊緣檢測器', command=self.my_function.canny_detector)
         self.operation1_menu.add_command(label='霍夫轉換', command=self.my_function.hough_transform)
         self.operation1_menu.add_command(label='高斯模糊', command=self.my_function.gaussianBlur)
-        self.operation1_menu.add_command(label='邊角偵測', command=self.my_function.corner_harris)
-        self.operation1_menu.add_command(label='輪廓檢測', command=self.my_function.contour)
-        self.operation1_menu.add_command(label='輪廓檢測(1)', command=self.my_function.find_contour)
 
         #Add operation2 submenu
         self.operation2_menu = tk.Menu(self.main_menu, tearoff=0)
@@ -52,12 +49,27 @@ class App:
         self.operation4_menu.add_command(label='仿射轉換(平移)', command=self.my_function.affine)
         self.operation4_menu.add_command(label='仿射轉換(旋轉)', command=self.my_function.rotate)
 
+        # Add operation5 submenu
+        self.operation5_menu = tk.Menu(self.main_menu, tearoff=0)
+        self.operation5_menu.add_command(label='邊角偵測', command=self.my_function.corner_harris)
+        self.operation5_menu.add_command(label='輪廓檢測', command=self.my_function.contour)
+        self.operation5_menu.add_command(label='輪廓檢測(1)', command=self.my_function.find_contour)
+        self.operation5_menu.add_command(label='凸包', command=self.my_function.convex_hull)
+        self.operation5_menu.add_command(label='邊界框', command=self.my_function.bounding_box)
+
+        # Add operation6 submenu
+        self.operation6_menu = tk.Menu(self.main_menu, tearoff=0)
+        self.operation6_menu.add_command(label='基本操作', command=self.my_function.basic_operations)
+
         #Add  submenu to mainmenu
         self.main_menu.add_cascade(label="檔案", menu=self.file_menu)
         self.main_menu.add_cascade(label='功能1', menu=self.operation1_menu)
         self.main_menu.add_cascade(label='功能2', menu=self.operation2_menu)
         self.main_menu.add_cascade(label='功能3', menu=self.operation3_menu)
         self.main_menu.add_cascade(label='功能4', menu=self.operation4_menu)
+        self.main_menu.add_cascade(label='功能5', menu=self.operation5_menu)
+        self.main_menu.add_cascade(label='功能6', menu=self.operation6_menu)
+
 
         #display menu
         self.window.config(menu=self.main_menu)
