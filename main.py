@@ -60,6 +60,7 @@ class App:
         # Add operation6 submenu
         self.operation6_menu = tk.Menu(self.main_menu, tearoff=0)
         self.operation6_menu.add_command(label='基本操作', command=self.my_function.basic_operations)
+        self.operation6_menu.add_command(label='高級型態', command=self.my_function.advanced_morphology)
 
         #Add  submenu to mainmenu
         self.main_menu.add_cascade(label="檔案", menu=self.file_menu)

@@ -304,19 +304,61 @@ class Myfunction:
 
         #ersion
         erosin_size = 1
-        erosin_element = cv.getStructuringElement(cv.MORPH_RECT, (2 * erosin_size * 1, 2 * erosin_size * 1),(erosin_size, erosin_size))
+        erosin_element = cv.getStructuringElement(cv.MORPH_RECT, (2 * erosin_size + 1, 2 * erosin_size + 1),(erosin_size, erosin_size))
         ersion = cv.erode(thresh, erosin_element)
         cv.imshow('Erosin', ersion)
 
         #dilation
         dilation_size = 3
-        dilation_element = cv.getStructuringElement(cv.MORPH_RECT, (2 * dilation_size * 1, 2 * dilation_size * 1), (dilation_size, dilation_size))
+        dilation_element = cv.getStructuringElement(cv.MORPH_RECT, (2 * dilation_size + 1, 2 * dilation_size + 1), (dilation_size, dilation_size))
         dilation = cv.dilate(ersion, dilation_element)
         cv.imshow('Dilation', dilation)
 
         #opening
         opening_size = 3
-        opening_element = cv.getStructuringElement(cv.MORPH_RECT, (2 * opening_size * 1, 2 * opening_size * 1),(opening_size,opening_size))
+        opening_element = cv.getStructuringElement(cv.MORPH_RECT, (2 * opening_size + 1, 2 * opening_size + 1),(opening_size,opening_size))
         opening = cv.morphologyEx(thresh,cv.MORPH_OPEN, opening_element)
         cv.imshow('Opening', opening)
 
+    def advanced_morphology(self):  # 高級型態
+        def morph_shape(val):
+            if val == 0:
+                return  cv.MORPH_RECT
+            elif val == 1:
+                return cv.MORPH_CROSS
+            elif val == 2:
+                return cv.MORPH_ELLIPSE
+
+        def dilation_callback(val):
+            dilation_size = val
+            dilation_shape = morph_shape(cv.getTrackbarPos(element_shape, dilation_window))
+            element = cv.getStructuringElement(dilation_shape, (2 * dilation_size + 1, 2 * dilation_size + 1), (dilation_size, dilation_size))
+
+            dilation_result = cv.dilate(src, element)
+            cv.imshow(dilation_window, dilation_result)
+        def erosion_callback(val):
+            erosion_size = val
+            erosion_shape = morph_shape(cv.getTrackbarPos(element_shape, erosion_window))
+            element = cv.getStructuringElement(erosion_shape, (2 * erosion_size + 1, 2 * erosion_size + 1), (erosion_size, erosion_size))
+
+            erosion_result = cv.erode(src, element)
+            cv.imshow(erosion_window, erosion_result)
+
+        max_element_size = 2
+        max_kernel_size = 21
+        element_shape = 'Element:\n 0: Rectangle\n 1: Cross\n 2: Ellipse'
+        kernel_size = 'Kernel size:\n 2n+1'
+        erosion_window = 'Erosion'
+        dilation_window = 'Dilation'
+        opening_window = 'Opening'
+        src = self.open_file1()
+
+        cv.namedWindow(erosion_window)
+        cv.createTrackbar(element_shape, erosion_window, 0, max_element_size, erosion_callback)
+        cv.createTrackbar(kernel_size, erosion_window, 1, max_kernel_size, erosion_callback)
+
+        cv.namedWindow(dilation_window)
+        cv.createTrackbar(element_shape, dilation_window, 0, max_element_size,dilation_callback)
+        cv.createTrackbar(kernel_size, dilation_window, 1, max_kernel_size, dilation_callback)
+
+        erosion_callback(0)
